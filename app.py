@@ -33,7 +33,7 @@ def predict():
     result = "Not Autistic" if prediction > 0.015 else "Autistic"
 
     # Render the prediction result along with the image
-    return render_template('result.html', image_path=img_path, prediction=result)
+    return render_template('result-facial.html', image_path=img_path, prediction=result)
 
 if __name__ == '__main__':
     app.run(debug=True)
