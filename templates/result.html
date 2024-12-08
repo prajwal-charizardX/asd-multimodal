@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .result-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .prediction-result {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Autism Prediction for Facial Features</h1>
+    <div class="result-container">
+        <h2>Prediction Result</h2>
+        <!-- <div class="image-container">
+            <img src="{{ url_for('static', filename='/workspaces/asd-multimodal/uploads/WhatsApp-Image-2023-04-02-at-9.43.26-AM.jpg') }}" alt="Uploaded Image">
+        </div> -->
+        <div class="prediction-result">
+            <h3>Prediction: {{ prediction }}</h3>
+        </div>
+        <a href="/" class="back-link">Back to Home</a>
+    </div>
+</body>
+</html>
