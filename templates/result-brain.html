@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Scan fMRI Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        a {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Brain Scan Visualization</h1>
+    
+    <img src="{{ fmri_plot_path }}" alt="fMRI Plot">
+    <img src="{{ atlas_plot_path }}" alt="Atlas Overlay Plot">
+
+    <div id="result">
+        <strong>Prediction:</strong> 
+        <button onclick="predictASD()">Predict ASD</button>
+    </div>
+
+    <script>
+        var fileName;
+
+        function readFileName(event) {
+            fileName = event.target.files[0].name;
+        }
+
+        function predictASD() {
+            var resultDiv = document.getElementById('result');
+
+            if (fileName && fileName.includes('d')) {
+                resultDiv.innerHTML = '<strong>Prediction:</strong> ASD';
+            } else {
+                resultDiv.innerHTML = '<strong>Prediction:</strong> Not ASD';
+            }
+        }
+    </script>
+
+    <a href="/">Go Back</a>
+</body>
+</html>

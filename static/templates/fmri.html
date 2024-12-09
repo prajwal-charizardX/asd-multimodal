@@ -47,37 +47,13 @@
         button:hover {
             background-color: #45a049;
         }
-
-        #result {
-            margin-top: 20px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <h1>Predict ASD from fMRI Scan</h1>
-    <form>
-        <input type="file" id="fileInput" accept=".nii" onchange="readFileName(event)">
-        <button type="button" onclick="predictASD()">Predict</button>
+    <form action="/visualize" method="POST" enctype="multipart/form-data">
+        <input type="file" name="nii_file" accept=".nii,.nii.gz" required>
+        <button type="submit">Predict</button>
     </form>
-    <div id="result"></div>
-
-    <script>
-        var fileName;
-
-        function readFileName(event) {
-            fileName = event.target.files[0].name;
-        }
-
-        function predictASD() {
-            var resultDiv = document.getElementById('result');
-
-            if (fileName && fileName.includes('d')) {
-                resultDiv.innerHTML = '<strong>Prediction:</strong> ASD';
-            } else {
-                resultDiv.innerHTML = '<strong>Prediction:</strong> Not ASD';
-            }
-        }
-    </script>
 </body>
 </html>

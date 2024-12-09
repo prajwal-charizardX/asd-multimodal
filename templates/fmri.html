@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -56,9 +56,9 @@
 </head>
 <body>
     <h1>Predict ASD from fMRI Scan</h1>
-    <form>
-        <input type="file" id="fileInput" accept=".nii" onchange="readFileName(event)">
-        <button type="button" onclick="predictASD()">Predict</button>
+    <form action="/visualize" method="POST" enctype="multipart/form-data">
+        <input type="file" name="nii_file" accept=".nii,.nii.gz" required>
+        <button type="submit">Visualize</button>
     </form>
     <div id="result"></div>
 
@@ -80,4 +80,4 @@
         }
     </script>
 </body>
-</html>
+</html> -->
