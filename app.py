@@ -6,6 +6,9 @@ import cv2
 from nilearn import plotting, image
 from nilearn.image import resample_to_img
 import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+import joblib
 
 app = Flask(__name__)
 
@@ -18,11 +21,43 @@ os.makedirs(PLOTS_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PLOTS_FOLDER'] = PLOTS_FOLDER
 
-# Load your pre-trained model
+# Load your pre-trained TensorFlow model
 model = tf.keras.models.load_model('/workspaces/asd-multimodal/models/autism(1).h5')
 
 # Path to atlas file
 ATLAS_PATH = os.path.join(os.getcwd(), 'data', 'atlas', 'template_cambridge_basc_multiscale_sym_scale064.nii.gz')
+
+# PyTorch model class
+class BinaryClassification(nn.Module):
+    def __init__(self):
+        super(BinaryClassification, self).__init__()
+        self.layer_1 = nn.Linear(2016, 256)
+        self.layer_2 = nn.Linear(256, 50)
+        self.layer_out = nn.Linear(50, 1)
+
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(p=0.1)
+        self.batchnorm1 = nn.BatchNorm1d(256)
+        self.batchnorm2 = nn.BatchNorm1d(50)
+
+    def forward(self, inputs):
+        x = self.relu(self.layer_1(inputs))
+        x = self.batchnorm1(x)
+        x = self.relu(self.layer_2(x))
+        x = self.batchnorm2(x)
+        x = self.dropout(x)
+        x = self.layer_out(x)
+        return x
+
+# Initialize PyTorch model
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+torch_model = BinaryClassification()
+torch_model.load_state_dict(torch.load("/workspaces/asd-multimodal/models/classifier.pt", map_location=device))
+torch_model.to(device)
+torch_model.eval()
+
+# Load scaler for feature vector normalization
+scaler = joblib.load("/workspaces/asd-multimodal/models/scaler.pkl")
 
 @app.route('/')
 def index():
@@ -76,6 +111,41 @@ def visualize():
         fmri_plot_path=fMRI_plot_path,
         atlas_plot_path=atlas_overlay_path
     )
+
+@app.route('/predict-fmri', methods=['POST'])
+def predict_fmri():
+    if 'feature-file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    file = request.files['feature-file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    # Load the feature vector
+    try:
+        features = np.load(file)['a']
+    except Exception as e:
+        return jsonify({"error": f"Failed to load feature vector: {str(e)}"}), 400
+
+    # Reshape and scale the features
+    features = features.reshape(1, -1)
+    features = scaler.transform(features)
+
+    # Convert to PyTorch tensor
+    features_tensor = torch.FloatTensor(features).to(device)
+
+    # Predict using the PyTorch model
+    with torch.no_grad():
+        prediction = torch_model(features_tensor)
+        probability = torch.sigmoid(prediction).item()
+        predicted_class = int(torch.round(torch.sigmoid(prediction)).item())
+
+    # Return result
+    result = {
+        "prediction": "ASD" if predicted_class == 0 else "TD",
+        "probability": probability
+    }
+    return jsonify(result)
 
 def generate_plot(nii_path):
     # Load the fMRI image

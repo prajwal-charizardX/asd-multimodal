@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #eef2f3;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -15,23 +15,75 @@
         }
 
         h1 {
-            color: #333;
+            color: #1d3557;
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
 
         img {
-            max-width: 100%;
+            max-width: 90%;
             height: auto;
+            border: 3px solid #457b9d;
+            border-radius: 10px;
+            margin: 10px 0;
         }
 
         #result {
             margin-top: 20px;
             text-align: center;
+            background-color: #f1faee;
+            padding: 20px;
+            border: 2px solid #a8dadc;
+            border-radius: 10px;
+            width: 80%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #457b9d;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            font-size: 1rem;
+            border: 1px solid #457b9d;
+            border-radius: 5px;
+            outline: none;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        button {
+            background-color: #1d3557;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #457b9d;
         }
 
         a {
             margin-top: 20px;
-            display: block;
-            text-align: center;
+            color: #1d3557;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #457b9d;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -43,26 +95,12 @@
 
     <div id="result">
         <strong>Prediction:</strong> 
-        <button onclick="predictASD()">Predict ASD</button>
+        <form id="predict-form" method="POST" action="/predict-fmri" enctype="multipart/form-data">
+            <label for="feature-file">Upload Brain Scan Feature Vector:</label><br>
+            <input type="file" id="feature-file" name="feature-file" accept=".npz"><br><br>
+            <button type="submit">Predict ASD</button>
+        </form>
     </div>
-
-    <script>
-        var fileName;
-
-        function readFileName(event) {
-            fileName = event.target.files[0].name;
-        }
-
-        function predictASD() {
-            var resultDiv = document.getElementById('result');
-
-            if (fileName && fileName.includes('d')) {
-                resultDiv.innerHTML = '<strong>Prediction:</strong> ASD';
-            } else {
-                resultDiv.innerHTML = '<strong>Prediction:</strong> Not ASD';
-            }
-        }
-    </script>
 
     <a href="/">Go Back</a>
 </body>
