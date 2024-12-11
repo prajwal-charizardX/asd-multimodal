@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, jsonify, url_for
+import pandas as pd
 import tensorflow as tf
 import numpy as np
 import os
@@ -13,7 +14,7 @@ import joblib
 app = Flask(__name__)
 
 # Create required folders
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'static/uploads'
 PLOTS_FOLDER = 'static/plots'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PLOTS_FOLDER, exist_ok=True)
@@ -23,6 +24,52 @@ app.config['PLOTS_FOLDER'] = PLOTS_FOLDER
 
 # Load your pre-trained TensorFlow model
 model = tf.keras.models.load_model('/workspaces/asd-multimodal/models/autism(1).h5')
+
+# Load the model and scaler
+loaded_model = joblib.load('/workspaces/asd-multimodal/models/svm_model_imp.joblib')
+loaded_scaler = joblib.load('/workspaces/asd-multimodal/models/scaler_gene.pkl')
+
+@app.route('/predict_gene', methods=['POST'])
+def predict_gene():
+    try:
+        # Get dataset from request
+        data = request.json
+        dataset = pd.DataFrame(data['dataset'])
+
+        # Scale the input
+        scaled_input = loaded_scaler.transform(dataset)
+
+        # Features of interest
+        features_of_interest = [
+            'number-of-reports',
+            'genetic-category_Rare Single Gene Mutation, Syndromic',
+            'genetic-category_Rare Single Gene Mutation, Syndromic, Functional',
+            'genetic-category_Rare Single Gene Mutation, Syndromic, Genetic Association',
+            'chromosome_12', 'chromosome_19', 'genetic-category_Syndromic, Genetic Association',
+            'genetic-category_Syndromic', 'genetic-category_Rare Single Gene Mutation, Syndromic, Genetic Association, Functional',
+            'chromosome_22', 'chromosome_9', 'chromosome_5', 'chromosome_6', 'chromosome_15', 'chromosome_2', 'chromosome_20',
+            'chromosome_14', 'chromosome_X', 'chromosome_7', 'chromosome_10', 'chromosome_16', 'chromosome_21',
+            'genetic-category_Genetic Association, Functional', 'chromosome_3', 'chromosome_8', 'gene-score',
+            'genetic-category_Rare Single Gene Mutation, Functional', 'genetic-category_Rare Single Gene Mutation, Genetic Association, Functional',
+            'genetic-category_Genetic Association', 'genetic-category_Rare Single Gene Mutation, Genetic Association', 'genetic-category_Rare Single Gene Mutation'
+        ]
+
+        # Extract the features of interest
+        extracted_features = pd.DataFrame(scaled_input, columns=dataset.columns)[features_of_interest]
+
+        # Make predictions
+        predictions = loaded_model.predict(extracted_features)
+        probabilities = loaded_model.predict_proba(extracted_features)[:, 1]
+
+        # Prepare the response
+        response = {
+            "prediction": "ASD" if predictions[0] == 1 else "TD",
+            "probability": probabilities[0]
+        }
+        return jsonify(response)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 # Path to atlas file
 ATLAS_PATH = os.path.join(os.getcwd(), 'data', 'atlas', 'template_cambridge_basc_multiscale_sym_scale064.nii.gz')
@@ -166,4 +213,5 @@ def generate_plot(nii_path):
     return fmri_plot_path, atlas_overlay_path
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+

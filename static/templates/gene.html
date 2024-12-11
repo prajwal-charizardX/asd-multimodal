@@ -1,11 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Gene Data Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/joblib/0.1.7/joblib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <link rel="stylesheet" href="style_gene.css">
+    <script src="script_gene.js"></script>
 </head>
+
 <body>
-    
+    <h1>Gene Data Input Form</h1>
+    <form id="geneForm">
+        <label for="geneScore">Gene Score:</label>
+        <select id="geneScore" name="gene-score" required>
+            <option value="">Select Gene Score</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select><br><br>
+
+        <label for="numReports">Number of Reports:</label>
+        <input type="number" id="numReports" name="number-of-reports" required><br><br>
+
+        <label for="chromosome">Chromosome:</label>
+        <select id="chromosome" name="chromosome" required>
+            <option value="">Select Chromosome</option>
+            <option value="chromosome_2">2</option>
+            <option value="chromosome_3">3</option>
+            <option value="chromosome_4">4</option>
+            <option value="chromosome_5">5</option>
+            <option value="chromosome_6">6</option>
+            <option value="chromosome_7">7</option>
+            <option value="chromosome_8">8</option>
+            <option value="chromosome_9">9</option>
+            <option value="chromosome_10">10</option>
+            <option value="chromosome_11">11</option>
+            <option value="chromosome_12">12</option>
+            <option value="chromosome_13">13</option>
+            <option value="chromosome_14">14</option>
+            <option value="chromosome_15">15</option>
+            <option value="chromosome_16">16</option>
+            <option value="chromosome_17">17</option>
+            <option value="chromosome_18">18</option>
+            <option value="chromosome_19">19</option>
+            <option value="chromosome_20">20</option>
+            <option value="chromosome_21">21</option>
+            <option value="chromosome_22">22</option>
+            <option value="chromosome_X">X</option>
+            <option value="chromosome_X,Y">X,Y</option>
+            <option value="chromosome_Y">Y</option>
+        </select><br><br>
+
+        <h3>Genetic Categories</h3>
+        <label for="geneticCategory">Genetic Category:</label>
+        <select id="geneticCategory" name="genetic-category" required>
+            <option value="">Select Genetic Category</option>
+            <option value="genetic-category_Genetic Association">Genetic Association</option>
+            <option value="genetic-category_Genetic Association, Functional">Genetic Association, Functional</option>
+            <option value="genetic-category_Rare Single Gene Mutation">Rare Single Gene Mutation</option>
+            <option value="genetic-category_Rare Single Gene Mutation, Functional">Rare Single Gene Mutation, Functional
+            </option>
+            <option value="genetic-category_Rare Single Gene Mutation, Genetic Association">Rare Single Gene Mutation,
+                Genetic Association</option>
+            <option value="genetic-category_Rare Single Gene Mutation, Genetic Association, Functional">Rare Single Gene
+                Mutation, Genetic Association, Functional</option>
+            <option value="genetic-category_Rare Single Gene Mutation, Syndromic">Rare Single Gene Mutation, Syndromic
+            </option>
+            <option value="genetic-category_Rare Single Gene Mutation, Syndromic, Functional">Rare Single Gene Mutation,
+                Syndromic, Functional</option>
+            <option value="genetic-category_Rare Single Gene Mutation, Syndromic, Genetic Association">Rare Single Gene
+                Mutation, Syndromic, Genetic Association</option>
+            <option value="genetic-category_Rare Single Gene Mutation, Syndromic, Genetic Association, Functional">Rare
+                Single Gene Mutation, Syndromic, Genetic Association, Functional</option>
+            <option value="genetic-category_Syndromic">Syndromic</option>
+            <option value="genetic-category_Syndromic, Genetic Association">Syndromic, Genetic Association</option>
+        </select><br><br>
+
+        <button type="button" id="submitButton">Submit</button>
+    </form>
+
+    <h2>Generated ASD Result is</h2>
+    <pre id="output"></pre>
+
 </body>
+
 </html>
