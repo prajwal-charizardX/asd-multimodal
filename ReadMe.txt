@@ -20,3 +20,4 @@ End the runtime in terminal, and restart the app
 
 
 Everything should be good to go!!!!!!
+Visit "https://autify.b12sites.com/index#home" for my webpage
