@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, jsonify, url_for
 import pandas as pd
 import tensorflow as tf
+from flask_cors import CORS
 import numpy as np
 import os
 import cv2
@@ -12,6 +13,7 @@ import torch.nn as nn
 import joblib
 
 app = Flask(__name__)
+CORS(app)
 
 # Create required folders
 UPLOAD_FOLDER = 'static/uploads'
