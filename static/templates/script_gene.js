@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function sendToFlaskApp(payload) {
-        fetch('https://urban-dollop-9r5g497pq96f7qq4-5000.app.github.dev/predict_gene', {
+        fetch('https://ubiquitous-yodel-rq65vg49jjpcxrv-5000.app.github.dev/predict_gene', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),  // Send the entire payload, which includes the dataset
